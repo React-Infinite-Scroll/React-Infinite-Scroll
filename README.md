@@ -7,7 +7,7 @@
 `import InfiniteScroll from '@react-infinite-scroll/react-infinite-scroll'`
 
 ## Example
-```
+```js
 const scrollOwnerRef = useRef(null)
 const contentRef = useRef(null)
 
