@@ -4,7 +4,7 @@ import { debounce } from 'debounce';
 
 const InifiniteScroll = (props) => {
   const {
-    getScrollOwnerRef, getContentRef, children, loadMore, threshold
+    getScrollOwnerRef, getContentRef, children, loadMore, threshold, loader
   } = props;
 
   const getScrollOwnerEl = () => getScrollOwnerRef().current;
@@ -12,6 +12,8 @@ const InifiniteScroll = (props) => {
   const getContentEl = () => getContentRef().current;
 
   const [listenersAttached, setListenersAttached] = useState(false);
+
+  const [showLoader, setShowLoader] = useState(false);
 
   const scrollListener = debounce(() => {
     const owner = getScrollOwnerEl();
@@ -22,6 +24,7 @@ const InifiniteScroll = (props) => {
       // eslint-disable-next-line no-use-before-define
       detachScrollListener();
       setListenersAttached(false);
+      setShowLoader(true);
     }
   }, 100);
 
@@ -46,6 +49,7 @@ const InifiniteScroll = (props) => {
   useEffect(() => {
     if (getScrollOwnerEl() && !listenersAttached) {
       attachScrollListener();
+      setShowLoader(false);
     }
   }, [children]);
 
@@ -53,6 +57,10 @@ const InifiniteScroll = (props) => {
   return (
     <React.Fragment>
       {children}
+      {
+        showLoader
+          && loader
+      }
     </React.Fragment>
   );
 };
@@ -62,11 +70,13 @@ InifiniteScroll.propTypes = {
   getContentRef: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
   loadMore: PropTypes.func.isRequired,
-  threshold: PropTypes.number
+  threshold: PropTypes.number,
+  loader: PropTypes.node
 };
 
 InifiniteScroll.defaultProps = {
-  threshold: 500
+  threshold: 500,
+  loader: <div>Loading...</div>
 };
 
 export default InifiniteScroll;
