@@ -1,4 +1,6 @@
 # React-Infinite-Scroll
+![npm (scoped)](https://img.shields.io/npm/v/@react-infinite-scroll/react-infinite-scroll)
+[![Build Status](https://travis-ci.com/React-Infinite-Scroll/React-Infinite-Scroll.svg?branch=master)](https://travis-ci.com/React-Infinite-Scroll/React-Infinite-Scroll)
 
 ## Installation
 `npm i --save @react-infinite-scroll/react-infinite-scroll`
