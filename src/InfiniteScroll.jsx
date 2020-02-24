@@ -4,7 +4,7 @@ import { debounce } from 'debounce';
 
 const InifiniteScroll = (props) => {
   const {
-    getScrollOwnerRef, getContentRef, children, loadMore, threshold, loader
+    getScrollOwnerRef, getContentRef, children, loadMore, threshold, loader, hasMore
   } = props;
 
   const getScrollOwnerEl = () => getScrollOwnerRef().current;
@@ -47,18 +47,18 @@ const InifiniteScroll = (props) => {
   };
 
   useEffect(() => {
-    if (getScrollOwnerEl() && !listenersAttached) {
+    if (hasMore && getScrollOwnerEl() && !listenersAttached) {
       attachScrollListener();
       setShowLoader(false);
     }
-  }, [children]);
+  }, [children, hasMore]);
 
 
   return (
     <React.Fragment>
       {children}
       {
-        showLoader
+        hasMore && showLoader
           && loader
       }
     </React.Fragment>
@@ -71,11 +71,13 @@ InifiniteScroll.propTypes = {
   children: PropTypes.node.isRequired,
   loadMore: PropTypes.func.isRequired,
   threshold: PropTypes.number,
+  hasMore: PropTypes.bool,
   loader: PropTypes.node
 };
 
 InifiniteScroll.defaultProps = {
   threshold: 500,
+  hasMore: false,
   loader: <div>Loading...</div>
 };
 

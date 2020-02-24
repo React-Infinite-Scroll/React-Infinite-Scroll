@@ -21,6 +21,7 @@ const contentRef = useRef(null)
           loadMore={loadItems} // callback to load more items  
           threshold={300} // distance of remaining scroll in pixels to trigger loadMore callback
           loader={<div>Loading items...</div>}
+          hasMore={true} // boolean value, set false when you reach your last page.
         >
             {items} // wrap your list of items by InfiniteScroll, loader will be appended to children of InfiniteScroll
         </InfiniteScroll>
