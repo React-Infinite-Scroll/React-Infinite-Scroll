@@ -29,3 +29,7 @@ const contentRef = useRef(null)
   </table>
 </div>
 ```
+
+##
+
+PS: Please do report issues :)
