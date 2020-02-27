@@ -13,18 +13,24 @@ const InifiniteScroll = (props) => {
 
   const [listenersAttached, setListenersAttached] = useState(false);
 
-  const [showLoader, setShowLoader] = useState(false);
 
-  const scrollListener = debounce(() => {
+  const loadMoreData = () => {
+    loadMore();
+    // eslint-disable-next-line no-use-before-define
+    detachScrollListener();
+    setListenersAttached(false);
+  };
+
+  const shouldLoadMoreData = () => {
     const owner = getScrollOwnerEl();
     const content = getContentEl();
     const offset = content.scrollHeight - owner.scrollTop - owner.clientHeight;
-    if (offset < threshold) {
-      loadMore();
-      // eslint-disable-next-line no-use-before-define
-      detachScrollListener();
-      setListenersAttached(false);
-      setShowLoader(true);
+    return offset < threshold;
+  };
+
+  const scrollListener = debounce(() => {
+    if (shouldLoadMoreData()) {
+      loadMoreData();
     }
   }, 100);
 
@@ -48,8 +54,11 @@ const InifiniteScroll = (props) => {
 
   useEffect(() => {
     if (hasMore && getScrollOwnerEl() && !listenersAttached) {
-      attachScrollListener();
-      setShowLoader(false);
+      if (shouldLoadMoreData()) {
+        loadMore();
+      } else {
+        attachScrollListener();
+      }
     }
   }, [children, hasMore]);
 
@@ -58,7 +67,7 @@ const InifiniteScroll = (props) => {
     <React.Fragment>
       {children}
       {
-        hasMore && showLoader
+        hasMore && !listenersAttached
           && loader
       }
     </React.Fragment>

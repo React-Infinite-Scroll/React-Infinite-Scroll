@@ -31,7 +31,11 @@ const contentRef = useRef(null)
   </table>
 </div>
 ```
+## Tips
+The loadMore call is dependent on hasMore and items. If both values change and trigger two re renders on the InfiniteScroll component, then loadMore will be called for each re render resulting in total two calls. One of these calls may be duplicate for you.
 
-##
+To avoid unncessary loadMore calls for the same page, try to change these values together and trigger a single re render on the component.
+
+For example, when using Redux, set these two values using the same action.
 
 PS: Please do report issues :)
