@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'debounce';
 
 const InifiniteScroll = (props) => {
   const {
-    getScrollOwnerRef, getContentRef, children, loadMore, threshold, loader, hasMore
+    getScrollOwnerRef, getContentRef, children, loadMore, threshold, loader,
+    hasMore
   } = props;
 
-  const getScrollOwnerEl = () => getScrollOwnerRef().current;
+  const getScrollOwnerEl = useCallback(() => getScrollOwnerRef().current,
+    [getScrollOwnerRef]);
 
-  const getContentEl = () => getContentRef().current;
+  const getContentEl = useCallback(() => getContentRef().current,
+    [getContentRef]);
 
   const [listenersAttached, setListenersAttached] = useState(false);
 
@@ -21,28 +24,18 @@ const InifiniteScroll = (props) => {
     setListenersAttached(false);
   };
 
-  const shouldLoadMoreData = () => {
+  const shouldLoadMoreData = useCallback(() => {
     const owner = getScrollOwnerEl();
     const content = getContentEl();
     const offset = content.scrollHeight - owner.scrollTop - owner.clientHeight;
     return offset < threshold;
-  };
+  }, [getScrollOwnerEl, getContentEl, threshold]);
 
   const scrollListener = debounce(() => {
     if (shouldLoadMoreData()) {
       loadMoreData();
     }
   }, 100);
-
-  const attachScrollListener = () => {
-    const scrollOwnerEl = getScrollOwnerEl();
-
-    scrollOwnerEl.addEventListener(
-      'scroll',
-      scrollListener
-    );
-    setListenersAttached(true);
-  };
 
   const detachScrollListener = () => {
     const scrollOwnerEl = getScrollOwnerEl();
@@ -53,6 +46,16 @@ const InifiniteScroll = (props) => {
   };
 
   useEffect(() => {
+    const attachScrollListener = () => {
+      const scrollOwnerEl = getScrollOwnerEl();
+
+      scrollOwnerEl.addEventListener(
+        'scroll',
+        scrollListener
+      );
+      setListenersAttached(true);
+    };
+
     if (hasMore && getScrollOwnerEl() && !listenersAttached) {
       if (shouldLoadMoreData()) {
         loadMore();
@@ -60,7 +63,8 @@ const InifiniteScroll = (props) => {
         attachScrollListener();
       }
     }
-  }, [children, hasMore]);
+  }, [children, hasMore, getScrollOwnerEl, listenersAttached,
+    loadMore, shouldLoadMoreData, scrollListener]);
 
 
   return (
@@ -68,7 +72,7 @@ const InifiniteScroll = (props) => {
       {children}
       {
         hasMore && !listenersAttached
-          && loader
+        && loader
       }
     </React.Fragment>
   );
