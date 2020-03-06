@@ -24,6 +24,7 @@ const contentRef = useRef(null)
           threshold={300} // distance of remaining scroll in pixels to trigger loadMore callback
           loader={<div>Loading items...</div>}
           hasMore={true} // boolean value, set false when you reach your last page.
+          isLoading={false} // boolean value, to avoid load calls while a page is being loaded
         >
             {items} // wrap your list of items by InfiniteScroll, loader will be appended to children of InfiniteScroll
         </InfiniteScroll>
@@ -31,13 +32,5 @@ const contentRef = useRef(null)
   </table>
 </div>
 ```
-## Tips
-### Are you observing unnecessary loadMore calls?
-The loadMore call is dependent on hasMore and items.\
-If for a transaction, both values change and trigger two re renders on the InfiniteScroll component, then loadMore will be called for each re render resulting in total two calls. One of these calls may be duplicate for you.
-
-If you are facing duplicate loadMore calls, try to change these values together and trigger a single re render on the component.
-
-For example, when using Redux, set these two values using the same action.
 
 PS: Please do report issues :)
