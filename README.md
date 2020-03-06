@@ -33,5 +33,4 @@ const contentRef = useRef(null)
 </div>
 ```
 
-
 PS: Please do report issues :)
