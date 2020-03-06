@@ -5,7 +5,7 @@ import { debounce } from 'debounce';
 const InifiniteScroll = (props) => {
   const {
     getScrollOwnerRef, getContentRef, children, loadMore, threshold, loader,
-    hasMore
+    hasMore, isLoading
   } = props;
 
   const getScrollOwnerEl = useCallback(() => getScrollOwnerRef().current,
@@ -56,7 +56,7 @@ const InifiniteScroll = (props) => {
       setListenersAttached(true);
     };
 
-    if (hasMore && getScrollOwnerEl() && !listenersAttached) {
+    if (hasMore && !isLoading && getScrollOwnerEl() && !listenersAttached) {
       if (shouldLoadMoreData()) {
         loadMore();
       } else {
@@ -85,13 +85,15 @@ InifiniteScroll.propTypes = {
   loadMore: PropTypes.func.isRequired,
   threshold: PropTypes.number,
   hasMore: PropTypes.bool,
-  loader: PropTypes.node
+  loader: PropTypes.node,
+  isLoading: PropTypes.bool
 };
 
 InifiniteScroll.defaultProps = {
-  threshold: 500,
-  hasMore: false,
-  loader: <div>Loading...</div>
+  threshold: 100,
+  hasMore: true,
+  loader: <div>Loading...</div>,
+  isLoading: false
 };
 
 export default InifiniteScroll;
